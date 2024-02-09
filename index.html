@@ -33,6 +33,7 @@
         var ctx = canvas.getContext("2d");
         var isDrawing = false;
         var points = [];
+        var topPoint, bottomPoint; // 上端と下端の座標を保持する変数を追加
         canvas.addEventListener("mousedown", startDrawing);
         canvas.addEventListener("mousemove", drawLine);
         canvas.addEventListener("mouseup", endDrawing);
@@ -73,6 +74,9 @@
             ctx.moveTo(points[points.length - 2].x, points[points.length - 2].y);
             ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
             ctx.stroke();
+            // 上端と下端の座標を更新
+            topPoint = points[0];
+            bottomPoint = points[points.length - 1];
         }
         function endDrawing() {
             isDrawing = false;
