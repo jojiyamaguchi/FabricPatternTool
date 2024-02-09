@@ -6,11 +6,13 @@
         body {
             margin: 0;
             padding: 0;
+            overflow: hidden; /* オーバーフローを隠す */
         }
         canvas {
             border: 1px solid black;
-            width: 99%;
-            height: 90%;
+            width: 100%; /* 画面幅に合わせる */
+            height: 90vh; /* 画面高さの90%に合わせる */
+            display: block; /* ブロック要素に変更 */
         }
         .button-container {
             display: flex;
@@ -23,7 +25,7 @@
     </style>
 </head>
 <body>
-    <canvas id="myCanvas" width="990" height="900"></canvas>
+    <canvas id="myCanvas"></canvas>
     <div class="button-container">
         <button class="button" onclick="setDrawingMode()">描画モード</button>
         <button class="button" onclick="setExpandMode()">展開モード</button>
@@ -33,7 +35,8 @@
         var ctx = canvas.getContext("2d");
         var isDrawing = false;
         var points = [];
-        var topPoint, bottomPoint; // 上端と下端の座標を保持する変数を追加
+        canvas.width = window.innerWidth; // ウィンドウの幅にCanvasの幅を合わせる
+        canvas.height = window.innerHeight * 0.9; // ウィンドウの高さの90%にCanvasの高さを合わせる
         canvas.addEventListener("mousedown", startDrawing);
         canvas.addEventListener("mousemove", drawLine);
         canvas.addEventListener("mouseup", endDrawing);
@@ -43,30 +46,13 @@
         function startDrawing(event) {
             event.preventDefault();
             isDrawing = true;
-            var rect = canvas.getBoundingClientRect();
-            var point = {
-                x: event.clientX - rect.left,
-                y: event.clientY - rect.top
-            };
+            var point = getCanvasCoordinates(event);
             points.push(point);
         }
         function drawLine(event) {
             event.preventDefault();
             if (!isDrawing) return;
-            var point;
-            if (event.type === "mousemove") {
-                var rect = canvas.getBoundingClientRect();
-                point = {
-                    x: event.clientX - rect.left,
-                    y: event.clientY - rect.top
-                };
-            } else if (event.type === "touchmove") {
-                var rect = canvas.getBoundingClientRect();
-                point = {
-                    x: event.touches[0].clientX - rect.left,
-                    y: event.touches[0].clientY - rect.top
-                };
-            }
+            var point = getCanvasCoordinates(event);
             points.push(point);
             ctx.lineWidth = 1;
             ctx.strokeStyle = "black";
@@ -74,29 +60,16 @@
             ctx.moveTo(points[points.length - 2].x, points[points.length - 2].y);
             ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
             ctx.stroke();
-            // 上端と下端の座標を更新
-            topPoint = points[0];
-            bottomPoint = points[points.length - 1];
         }
         function endDrawing() {
             isDrawing = false;
         }
-        function drawCircles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (var i = 1; i < points.length; i++) {
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = "black";
-                ctx.beginPath();
-                ctx.moveTo(points[i - 1].x, points[i - 1].y);
-                ctx.lineTo(points[i].x, points[i].y);
-                ctx.stroke();
-                ctx.fillStyle = "blue";
-                ctx.beginPath();
-                ctx.arc(points[i].x, points[i].y, 4, 0, 2 * Math.PI);
-                ctx.fill();
-            }
+        function getCanvasCoordinates(event) {
+            var rect = canvas.getBoundingClientRect();
+            var x = (event.clientX - rect.left) * canvas.width / rect.width;
+            var y = (event.clientY - rect.top) * canvas.height / rect.height;
+            return { x: x, y: y };
         }
-        setInterval(drawCircles, 100);
         function setDrawingMode() {
             canvas.removeEventListener("mousedown", startDrawing);
             canvas.removeEventListener("mousemove", drawLine);
