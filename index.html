@@ -55,13 +55,13 @@
             var point;
             if (event.type === "mousemove") {
                 point = {
-                    x: event.clientX - canvas.offsetLeft,
-                    y: event.clientY - canvas.offsetTop
+                    x: event.x - canvas.offsetLeft,
+                    y: event.y - canvas.offsetTop
                 };
             } else if (event.type === "touchmove") {
                 point = {
-                    x: event.touches[0].clientX - canvas.offsetLeft,
-                    y: event.touches[0].clientY - canvas.offsetTop
+                    x: event.touches[0].x - canvas.offsetLeft,
+                    y: event.touches[0].y - canvas.offsetTop
                 };
             }
             points.push(point);
@@ -110,7 +110,8 @@
             canvas.removeEventListener("touchstart", startDrawing);
             canvas.removeEventListener("touchmove", drawLine);
             canvas.removeEventListener("touchend", endDrawing);
-        }                function drawCircles() {
+        }                
+        function drawCircles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (var i = 1; i < points.length; i++) {
                 ctx.lineWidth = 1;
