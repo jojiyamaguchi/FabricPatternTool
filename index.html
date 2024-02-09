@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Canvas Drawing</title>
+
+    <style>
+
+        canvas {
+
+            border: 1px solid black;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+
+    <script>
+
+        var canvas = document.getElementById("myCanvas");
+
+        var ctx = canvas.getContext("2d");
+
+        var isDrawing = false;
+
+        var points = [];
+
+        canvas.addEventListener("mousedown", startDrawing);
+
+        canvas.addEventListener("mousemove", drawLine);
+
+        canvas.addEventListener("mouseup", endDrawing);
+
+        function startDrawing(event) {
+
+            isDrawing = true;
+
+            var point = {
+
+                x: event.clientX - canvas.offsetLeft,
+
+                y: event.clientY - canvas.offsetTop
+
+            };
+
+            points.push(point);
+
+        }
+
+        function drawLine(event) {
+
+            if (!isDrawing) return;
+
+            var point = {
+
+                x: event.clientX - canvas.offsetLeft,
+
+                y: event.clientY - canvas.offsetTop
+
+            };
+
+            points.push(point);
+
+            ctx.lineWidth = 1;
+
+            ctx.strokeStyle = "black";
+
+            ctx.beginPath();
+
+            ctx.moveTo(points[points.length - 2].x, points[points.length - 2].y);
+
+            ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+
+            ctx.stroke();
+
+        }
+
+        function endDrawing() {
+
+            isDrawing = false;
+
+        }
+
+        function drawCircles() {
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (var i = 1; i < points.length; i++) {
+
+                ctx.lineWidth = 1;
+
+                ctx.strokeStyle = "black";
+
+                ctx.beginPath();
+
+                ctx.moveTo(points[i - 1].x, points[i - 1].y);
+
+                ctx.lineTo(points[i].x, points[i].y);
+
+                ctx.stroke();
+
+                ctx.fillStyle = "blue";
+
+                ctx.beginPath();
+
+                ctx.arc(points[i].x, points[i].y, 4, 0, 2 * Math.PI);
+
+                ctx.fill();
+
+            }
+
+        }
+
+        setInterval(drawCircles, 100);
+
+    </script>
+
+</body>
+
+</html>
