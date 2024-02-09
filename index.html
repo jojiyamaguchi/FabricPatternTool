@@ -11,7 +11,7 @@
         canvas {
             border: 1px solid black;
             width: 100%; /* 画面幅に合わせる */
-            height: 100vh; /* 画面高さの90%に合わせる */
+            height: 85vh; /* 画面高さの90%に合わせる */
             display: block; /* ブロック要素に変更 */
         }
         .button-container {
@@ -36,7 +36,7 @@
         var isDrawing = false;
         var points = [];
         canvas.width = window.innerWidth; // ウィンドウの幅にCanvasの幅を合わせる
-        canvas.height = window.innerHeight; // ウィンドウの高さの90%にCanvasの高さを合わせる
+        canvas.height = window.innerHeight * 0.85; // ウィンドウの高さの90%にCanvasの高さを合わせる
         canvas.addEventListener("mousedown", startDrawing);
         canvas.addEventListener("mousemove", drawLine);
         canvas.addEventListener("mouseup", endDrawing);
@@ -77,8 +77,16 @@
         }
         function getCanvasCoordinates(event) {
             var rect = canvas.getBoundingClientRect();
-            var x = (event.clientX - rect.left) * canvas.width / rect.width;
-            var y = (event.clientY - rect.top) * canvas.height / rect.height;
+            var x;
+            var y;
+            if(if (event.type === "mousemove") {
+                x = (event.clientX - rect.left) * canvas.width / rect.width;
+                y = (event.clientY - rect.top) * canvas.height / rect.height;
+            }
+            else if (event.type === "touchmove") {
+                x = (event.touches[0].clientX - rect.left) * canvas.width / rect.width;
+                y = (event.touches[0].clientY - rect.top) * canvas.height / rect.height;
+            }
             return { x: x, y: y };
         }
         function setDrawingMode() {
