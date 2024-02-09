@@ -3,15 +3,31 @@
 <head>
     <title>Canvas Drawing</title>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
         canvas {
             border: 1px solid black;
-            width:100%;
-            height:90%;
+            width: 99%;
+            height: 90%;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .button {
+            margin: 0 5px;
         }
     </style>
 </head>
 <body>
-    <canvas id="myCanvas" width="1000" height="900"></canvas>
+    <canvas id="myCanvas" width="990" height="900"></canvas>
+    <div class="button-container">
+        <button class="button" onclick="setDrawingMode()">描画モード</button>
+        <button class="button" onclick="setExpandMode()">展開モード</button>
+    </div>
     <script>
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
@@ -77,6 +93,28 @@
             }
         }
         setInterval(drawCircles, 100);
+        function setDrawingMode() {
+            canvas.removeEventListener("mousedown", startDrawing);
+            canvas.removeEventListener("mousemove", drawLine);
+            canvas.removeEventListener("mouseup", endDrawing);
+            canvas.removeEventListener("touchstart", startDrawing);
+            canvas.removeEventListener("touchmove", drawLine);
+            canvas.removeEventListener("touchend", endDrawing);
+            canvas.addEventListener("mousedown", startDrawing);
+            canvas.addEventListener("mousemove", drawLine);
+            canvas.addEventListener("mouseup", endDrawing);
+            canvas.addEventListener("touchstart", startDrawing);
+            canvas.addEventListener("touchmove", drawLine);
+            canvas.addEventListener("touchend", endDrawing);
+        }
+        function setExpandMode() {
+            canvas.removeEventListener("mousedown", startDrawing);
+            canvas.removeEventListener("mousemove", drawLine);
+            canvas.removeEventListener("mouseup", endDrawing);
+            canvas.removeEventListener("touchstart", startDrawing);
+            canvas.removeEventListener("touchmove", drawLine);
+            canvas.removeEventListener("touchend", endDrawing);
+        }
     </script>
 </body>
 </html>
