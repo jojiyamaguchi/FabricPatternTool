@@ -29,14 +29,18 @@
     <div class="button-container">
         <button class="button" onclick="setDrawingMode()">描画モード</button>
         <button class="button" onclick="setExpandMode()">展開モード</button>
+        <button class="button" onclick="clearCanvas()">削除</button>
     </div>
     <script>
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
         var isDrawing = false;
+        var expandMode = false;
         var points = [];
-        canvas.width = window.innerWidth * 0.95; // ウィンドウの幅にCanvasの幅を合わせる
-        canvas.height = window.innerHeight * 0.95; // ウィンドウの高さの90%にCanvasの高さを合わせる
+        var lineLengths = [];
+        var arc = []; // arc配列を追加
+        canvas.width = window.innerWidth * 0.95;
+        canvas.height = window.innerHeight * 0.95;
         canvas.addEventListener("mousedown", startDrawing);
         canvas.addEventListener("mousemove", drawLine);
         canvas.addEventListener("mouseup", endDrawing);
@@ -90,6 +94,7 @@
             return { x: x, y: y };
         }
         function setDrawingMode() {
+            expandMode = false;
             canvas.removeEventListener("mousedown", startDrawing);
             canvas.removeEventListener("mousemove", drawLine);
             canvas.removeEventListener("mouseup", endDrawing);
@@ -104,27 +109,66 @@
             canvas.addEventListener("touchend", endDrawing);
         }
         function setExpandMode() {
+            expandMode = true;
             canvas.removeEventListener("mousedown", startDrawing);
             canvas.removeEventListener("mousemove", drawLine);
             canvas.removeEventListener("mouseup", endDrawing);
             canvas.removeEventListener("touchstart", startDrawing);
             canvas.removeEventListener("touchmove", drawLine);
             canvas.removeEventListener("touchend", endDrawing);
-        }                
+            drawExpandLine();
+        }
         function drawCircles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (var i = 1; i < points.length; i++) {
+            if(!expandMode) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (var i = 1; i < points.length; i++) {
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = "black";
+                    ctx.beginPath();
+                    ctx.moveTo(points[i - 1].x, points[i - 1].y);
+                    ctx.lineTo(points[i].x, points[i].y);
+                    ctx.stroke();
+                    ctx.fillStyle = "blue";
+                    ctx.beginPath();
+                    ctx.arc(points[i].x, points[i].y, 4, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            }
+        }
+        function drawExpandLine() {
+            drawCircles();
+            for (var i = 0; i < points.length; i++) {
                 ctx.lineWidth = 1;
-                ctx.strokeStyle = "black";
+                ctx.strokeStyle = "grey";
                 ctx.beginPath();
-                ctx.moveTo(points[i - 1].x, points[i - 1].y);
-                ctx.lineTo(points[i].x, points[i].y);
+                ctx.moveTo(points[i].x, points[i].y);
+                ctx.lineTo(canvas.width, points[i].y);
                 ctx.stroke();
                 ctx.fillStyle = "blue";
                 ctx.beginPath();
                 ctx.arc(points[i].x, points[i].y, 4, 0, 2 * Math.PI);
                 ctx.fill();
+                var lineLength = canvas.width - points[i].x;
+                lineLengths.push(lineLength);
+                var arcLength = (lineLength * 2 * Math.PI) / 8; // arcの長さを計算
+                arc.push(arcLength); // arc配列に保存
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = "blue";
+                ctx.beginPath();
+                ctx.moveTo(points[i].x - arcLength, points[i].y);
+                ctx.lineTo(points[i].x, points[i].y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(points[i].x + arcLength, points[i].y);
+                ctx.lineTo(points[i].x, points[i].y);
+                ctx.stroke();
             }
+        }
+        function clearCanvas() {
+            points = [];
+            lineLengths = [];
+            arc = []; // arc配列もクリアする
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
         setInterval(drawCircles, 100);
     </script>
