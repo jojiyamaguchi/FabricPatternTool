@@ -46,16 +46,22 @@
         var rightPoints = []; // rightPoints配列を追加
         canvas.width = window.innerWidth * 0.95;
         canvas.height = window.innerHeight * 0.95;
-        canvas.addEventListener("mousedown", startDrawing);
+        canvas.addEventListener("mousedown", startDrawing_m);
         canvas.addEventListener("mousemove", drawLine);
         canvas.addEventListener("mouseup", endDrawing);
-        canvas.addEventListener("touchstart", startDrawing);
+        canvas.addEventListener("touchstart", startDrawing_t);
         canvas.addEventListener("touchmove", drawLine);
         canvas.addEventListener("touchend", endDrawing);
-        function startDrawing(event) {
+        function startDrawing_m(event) {
             event.preventDefault();
             isDrawing = true;
-            var point = getCanvasCoordinates(event);
+            var point = getCanvasCoordinates_m(event);
+            points.push(point);
+        }
+        function startDrawing_t(event) {
+            event.preventDefault();
+            isDrawing = true;
+            var point = getCanvasCoordinates_t(event);
             points.push(point);
         }
         function drawLine(event) {
@@ -84,7 +90,7 @@
         function endDrawing() {
             isDrawing = false;
         }
-        function getCanvasCoordinates(event) {
+        function getCanvasCoordinates_m(event) {
             var rect = canvas.getBoundingClientRect();
             var x;
             var y;
@@ -92,27 +98,35 @@
             y = (event.clientY - rect.top) * canvas.height / rect.height;
             return { x: x, y: y };
         }
+        function getCanvasCoordinates_t(event) {
+            var rect = canvas.getBoundingClientRect();
+            var x;
+            var y;
+            x = (event.touches[0].clientX - rect.left) * canvas.width / rect.width;
+            y = (event.touches[0].clientY - rect.top) * canvas.height / rect.height;
+            return { x: x, y: y };
+        }
         function setDrawingMode() {
             expandMode = false;
-            canvas.removeEventListener("mousedown", startDrawing);
+            canvas.removeEventListener("mousedown", startDrawing_m);
             canvas.removeEventListener("mousemove", drawLine);
             canvas.removeEventListener("mouseup", endDrawing);
-            canvas.removeEventListener("touchstart", startDrawing);
+            canvas.removeEventListener("touchstart", startDrawing_t);
             canvas.removeEventListener("touchmove", drawLine);
             canvas.removeEventListener("touchend", endDrawing);
-            canvas.addEventListener("mousedown", startDrawing);
+            canvas.addEventListener("mousedown", startDrawing_m);
             canvas.addEventListener("mousemove", drawLine);
             canvas.addEventListener("mouseup", endDrawing);
-            canvas.addEventListener("touchstart", startDrawing);
+            canvas.addEventListener("touchstart", startDrawing_t);
             canvas.addEventListener("touchmove", drawLine);
             canvas.addEventListener("touchend", endDrawing);
         }
         function setExpandMode() {
             expandMode = true;
-            canvas.removeEventListener("mousedown", startDrawing);
+            canvas.removeEventListener("mousedown", startDrawing_m);
             canvas.removeEventListener("mousemove", drawLine);
             canvas.removeEventListener("mouseup", endDrawing);
-            canvas.removeEventListener("touchstart", startDrawing);
+            canvas.removeEventListener("touchstart", startDrawing_t);
             canvas.removeEventListener("touchmove", drawLine);
             canvas.removeEventListener("touchend", endDrawing);
             drawExpandLine();
