@@ -60,8 +60,8 @@
                 };
             } else if (event.type === "touchmove") {
                 point = {
-                    x: event.touches[0].clientX - canvas.offsetLeft,
-                    y: event.touches[0].clientY - canvas.offsetTop
+                    x: event.touches[0].screenX - canvas.offsetLeft,
+                    y: event.touches[0].screenY - canvas.offsetTop
                 };
             }
             points.push(point);
