@@ -52,7 +52,18 @@
         function drawLine(event) {
             event.preventDefault();
             if (!isDrawing) return;
-            var point = getCanvasCoordinates(event);
+            var point;
+            if (event.type === "mousemove") {
+                point = {
+                    x: event.clientX - canvas.offsetLeft,
+                    y: event.clientY - canvas.offsetTop
+                };
+            } else if (event.type === "touchmove") {
+                point = {
+                    x: event.touches[0].clientX - canvas.offsetLeft,
+                    y: event.touches[0].clientY - canvas.offsetTop
+                };
+            }
             points.push(point);
             ctx.lineWidth = 1;
             ctx.strokeStyle = "black";
