@@ -11,7 +11,7 @@
         canvas {
             border: 1px solid black;
             width: 100%; /* 画面幅に合わせる */
-            height: 80vh; /* 画面高さの90%に合わせる */
+            height: 100vh; /* 画面高さの90%に合わせる */
             display: block; /* ブロック要素に変更 */
         }
         .button-container {
@@ -36,7 +36,7 @@
         var isDrawing = false;
         var points = [];
         canvas.width = window.innerWidth; // ウィンドウの幅にCanvasの幅を合わせる
-        canvas.height = window.innerHeight * 0.8; // ウィンドウの高さの90%にCanvasの高さを合わせる
+        canvas.height = window.innerHeight; // ウィンドウの高さの90%にCanvasの高さを合わせる
         canvas.addEventListener("mousedown", startDrawing);
         canvas.addEventListener("mousemove", drawLine);
         canvas.addEventListener("mouseup", endDrawing);
