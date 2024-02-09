@@ -42,6 +42,8 @@
         var arc = [];
         var dist = []; // dist配列を追加
         var centerPoints = []; // centerPoints配列を追加
+        var leftPoints = []; // leftPoints配列を追加
+        var rightPoints = []; // rightPoints配列を追加
         canvas.width = window.innerWidth * 0.95;
         canvas.height = window.innerHeight * 0.95;
         canvas.addEventListener("mousedown", startDrawing);
@@ -182,7 +184,31 @@
                 ctx.beginPath();
                 ctx.arc(centerPoints[i].x, centerPoints[i].y, 4, 0, 2 * Math.PI);
                 ctx.fill();
+                ctx.strokeStyle = "blue";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(centerPoints[i].x - arc[i], centerPoints[i].y);
+                ctx.lineTo(centerPoints[i].x + arc[i], centerPoints[i].y);
+                ctx.stroke();
+                leftPoints.push({x: centerPoints[i].x - arc[i], y: centerPoints[i].y});
+                rightPoints.push({x: centerPoints[i].x + arc[i], y: centerPoints[i].y});
             }
+
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(leftPoints[0].x, leftPoints[0].y);
+            for (var i = 1; i < leftPoints.length; i++) {
+                ctx.lineTo(leftPoints[i].x, leftPoints[i].y);
+            }
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(rightPoints[0].x, rightPoints[0].y);
+            for (var i = 1; i < rightPoints.length; i++) {
+                ctx.lineTo(rightPoints[i].x, rightPoints[i].y);
+            }
+            ctx.stroke();
         }
         function clearCanvas() {
             points = [];
@@ -190,6 +216,8 @@
             arc = [];
             dist = [];
             centerPoints = [];
+            leftPoints = [];
+            rightPoints = [];
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
         setInterval(drawCircles, 100);
