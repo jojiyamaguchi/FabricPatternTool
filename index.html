@@ -10,7 +10,7 @@
         }
         canvas {
             border: 1px solid black;
-            width: 100%; /* 画面幅に合わせる */
+            width: 95%; /* 画面幅に合わせる */
             height: 95%; /* 画面高さの90%に合わせる */
             display: block; /* ブロック要素に変更 */
         }
@@ -35,7 +35,7 @@
         var ctx = canvas.getContext("2d");
         var isDrawing = false;
         var points = [];
-        canvas.width = window.innerWidth; // ウィンドウの幅にCanvasの幅を合わせる
+        canvas.width = window.innerWidth * 0.95; // ウィンドウの幅にCanvasの幅を合わせる
         canvas.height = window.innerHeight * 0.95; // ウィンドウの高さの90%にCanvasの高さを合わせる
         canvas.addEventListener("mousedown", startDrawing);
         canvas.addEventListener("mousemove", drawLine);
