@@ -11,7 +11,7 @@
         canvas {
             border: 1px solid black;
             width: 95%; /* 画面幅に合わせる */
-            height: 95%; /* 画面高さの90%に合わせる */
+            height: 90%; /* 画面高さの90%に合わせる */
             display: block; /* ブロック要素に変更 */
         }
         .button-container {
@@ -21,6 +21,21 @@
         }
         .button {
             margin: 0 5px;
+            width: 150px; /* ボタンの幅を3倍に設定 */
+            height: 50px; /* ボタンの高さを3倍に設定 */
+            font-size: 1.5em; /* フォントサイズを1.5倍に設定 */
+        }
+        .input-container {
+            display: flex;
+            flex-direction: row; /* 縦方向に配置 */
+            justify-content: center;
+            align-items: center; /* 中央揃えに配置 */
+            margin-bottom: 10px;
+        }
+        .input {
+            margin: 0 5px;
+            width: 100px;
+            height: 30px;
         }
     </style>
 </head>
@@ -31,6 +46,12 @@
         <button class="button" onclick="setDrawingMode()">描画モード</button>
         <button class="button" onclick="setExpandMode()">展開モード</button>
         <button class="button" onclick="clearCanvas()">削除</button>
+    </div>
+    <div class="input-container">
+        <label for="rotation-input">回転角度</label>
+        <input class="input" type="number" id="rotation-input" placeholder="回転角度" value="90">
+        <label for="seam-width-input">ぬいしろ</label>
+        <input class="input" type="number" id="seam-width-input" placeholder="縫い代幅" value="5">
     </div>
     <script>
         var canvas = document.getElementById("myCanvas");
@@ -46,7 +67,7 @@
         var rightPoints = []; // rightPoints配列を追加
         var mirrorPoints = [];  // 鏡面対称軸
         canvas.width = window.innerWidth * 0.95;
-        canvas.height = window.innerHeight * 0.95;
+        canvas.height = window.innerHeight * 0.90;
         canvas.addEventListener("mousedown", startDrawing_m);
         canvas.addEventListener("mousemove", drawLine);
         canvas.addEventListener("mouseup", endDrawing);
@@ -178,6 +199,9 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             //drawMirrorLine();
             //drawCircles();
+　　　　          
+            var deg = document.getElementById("rotation-input").value;
+            var arcRatio = (deg / 2) / 360;
             arc = [];
             dist = [];
             centerPoints = [];
@@ -186,7 +210,7 @@
             for (var i = 0; i < points.length; i++) {
                 var lineLength = mirrorPoints[0].x - points[i].x;
                 lineLengths.push(lineLength);
-                var arcLength = (lineLength * 2 * Math.PI) / 8;
+                var arcLength = (lineLength * 2 * Math.PI) * arcRatio ;
                 arc.push(arcLength);
             }     
             for(var i = 0; i < points.length - 1; i++) {
@@ -236,9 +260,12 @@
                 ctx.lineTo(rightPoints[i].x, rightPoints[i].y);
             }
             ctx.stroke();
-            // drawParallelLines();
+            drawParallelLines();
         }
         function drawParallelLines() {
+            var seamWidth = document.getElementById("seam-width-input").value;
+            var mms = seamWidth;
+            var mmsPx = mms * 2.54 * window.devicePixelRatio ;
             var orgPoints = [];
             orgPoints.push(centerPoints[0]);
             for(var i = 0; i < leftPoints.length; i++) {
@@ -252,8 +279,8 @@
                 var dx = p2.x - p1.x;
                 var dy = p2.y - p1.y;
                 var length = Math.sqrt(dx * dx + dy * dy);
-                var offsetX = (dy / length) * -10;
-                var offsetY = (-dx / length) * -10;
+                var offsetX = (dy / length) * -1 * mmsPx ;
+                var offsetY = (-dx / length) * -1 * mmsPx ;
                 var offsetP1 = { x: p1.x + offsetX, y: p1.y + offsetY };
                 var offsetP2 = { x: p2.x + offsetX, y: p2.y + offsetY };
                 offsetPoints.push(offsetP1);
