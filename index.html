@@ -44,6 +44,7 @@
         var centerPoints = []; // centerPoints配列を追加
         var leftPoints = []; // leftPoints配列を追加
         var rightPoints = []; // rightPoints配列を追加
+        var mirrorPoints = [];  // 鏡面対称軸
         canvas.width = window.innerWidth * 0.95;
         canvas.height = window.innerHeight * 0.95;
         canvas.addEventListener("mousedown", startDrawing_m);
@@ -120,6 +121,19 @@
             canvas.addEventListener("touchstart", startDrawing_t);
             canvas.addEventListener("touchmove", drawLine);
             canvas.addEventListener("touchend", endDrawing);
+            drawMirrorLine();
+        }        
+        function drawMirrorLine() {
+            if(!expandMode) {
+              mirrorPoints.push({x: canvas.width/2, y: 0});
+              mirrorPoints.push({x: canvas.width/2, y: canvas.height});
+              ctx.lineWidth = 1;
+              ctx.strokeStyle = "blue";
+              ctx.beginPath();
+              ctx.moveTo(mirrorPoints[0].x, mirrorPoints[0].y);
+              ctx.lineTo(mirrorPoints[1].x, mirrorPoints[1].y);
+              ctx.stroke();
+            }
         }
         function setExpandMode() {
             expandMode = true;
@@ -147,6 +161,7 @@
                     ctx.fill();
                 }
             }
+            drawMirrorLine();
         }
         function drawExpandLine() {
             drawCircles();
@@ -155,13 +170,13 @@
                 ctx.strokeStyle = "grey";
                 ctx.beginPath();
                 ctx.moveTo(points[i].x, points[i].y);
-                ctx.lineTo(canvas.width, points[i].y);
+                ctx.lineTo(mirrorPoints[0].x, points[i].y);
                 ctx.stroke();
                 ctx.fillStyle = "blue";
                 ctx.beginPath();
                 ctx.arc(points[i].x, points[i].y, 4, 0, 2 * Math.PI);
                 ctx.fill();
-                var lineLength = canvas.width - points[i].x;
+                var lineLength = mirrorPoints[0].x - points[i].x;
                 lineLengths.push(lineLength);
                 var arcLength = (lineLength * 2 * Math.PI) / 8;
                 arc.push(arcLength);
@@ -232,6 +247,7 @@
             centerPoints = [];
             leftPoints = [];
             rightPoints = [];
+            mirrorPoints = [];
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
         setInterval(drawCircles, 100);
