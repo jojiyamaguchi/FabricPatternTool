@@ -268,14 +268,15 @@
             var mms = seamWidth;
 
             // ピクセル密度（PPI）を取得
-            var ppi = window.devicePixelRatio * 96; // 1インチあたりの標準的なピクセル密度は96ppi
+            //var ppi = window.devicePixelRatio * 96; // 1インチあたりの標準的なピクセル密度は96ppi
+            var ppi = 3 * 96; // 1インチあたりの標準的なピクセル密度は96ppi
             document.getElementById("debug-div").innerHTML = "Device Pixel Ratio = " + window.devicePixelRatio;
 
             // 1インチあたりのミリメートル数
             var mmPerInch = 25.4;
 
             // CSSピクセル数を計算
-            var cssPixels = mms * 2.5 * ppi / mmPerInch;
+            var cssPixels = mms * ppi / mmPerInch;
             var multiplier = -1;
             if(left) {
               multiplier = -1;
