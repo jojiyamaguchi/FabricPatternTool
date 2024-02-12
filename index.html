@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+-<!DOCTYPE html>
 <html>
 <head>
     <title>Circular Pattern Generator</title>
@@ -260,9 +260,10 @@
                 ctx.lineTo(rightPoints[i].x, rightPoints[i].y);
             }
             ctx.stroke();
-            drawParallelLines();
+            drawParallelLines(true);
+            drawParallelLines(false);
         }
-        function drawParallelLines() {
+        function drawParallelLines(left) {
             var seamWidth = document.getElementById("seam-width-input").value;
             var mms = seamWidth;
 
@@ -274,13 +275,26 @@
 
             // CSSピクセル数を計算
             var cssPixels = mms * ppi / mmPerInch;
+            var multiplier = -1;
+            if(left) {
+              multiplier = -1;
+            }
 
             var orgPoints = [];
-            orgPoints.push(centerPoints[0]);
-            for(var i = 0; i < leftPoints.length; i++) {
-              orgPoints.push(leftPoints[i]);
+            if(left) {
+              orgPoints.push(centerPoints[0]);
+              for(var i = 0; i < leftPoints.length; i++) {
+                orgPoints.push(leftPoints[i]);
+              }
+              orgPoints.push(centerPoints[centerPoints.length - 1]);
             }
-            orgPoints.push(centerPoints[centerPoints.length - 1]);
+            else {
+              orgPoints.push(centerPoints[centerPoints.length - 1]);
+              for(var i = rightPoints.length - 1; i >= 0; i--) {
+                orgPoints.push(rightPoints[i]);
+              }
+              orgPoints.push(centerPoints[0]);
+            }
             var offsetPoints = [];
             for (var i = 0; i < orgPoints.length - 1; i++) {
                 var p1 = orgPoints[i];
@@ -288,8 +302,8 @@
                 var dx = p2.x - p1.x;
                 var dy = p2.y - p1.y;
                 var length = Math.sqrt(dx * dx + dy * dy);
-                var offsetX = (dy / length) * -1 * cssPixels ;
-                var offsetY = (-dx / length) * -1 * cssPixels ;
+                var offsetX = (dy / length) * multiplier * cssPixels ;
+                var offsetY = (-dx / length) * multiplier * cssPixels ;
                 var offsetP1 = { x: p1.x + offsetX, y: p1.y + offsetY };
                 var offsetP2 = { x: p2.x + offsetX, y: p2.y + offsetY };
                 offsetPoints.push(offsetP1);
