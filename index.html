@@ -42,7 +42,6 @@
 <body>
     <canvas id="myCanvas"></canvas>
     <div id="debug-div"></div>
-    <p>Previous URL: <span id="previous-url"></span></p>
     <div class="button-container">
         <button class="button" onclick="setDrawingMode()">描画モード</button>
         <button class="button" onclick="setExpandMode()">展開モード</button>
@@ -55,9 +54,6 @@
         <input class="input" type="number" id="seam-width-input" placeholder="縫い代幅" value="0">
     </div>
     <script>
-        console.log(document.referrer);
-        //document.getElementById("previous-url").innerText = document.referrer;
-        
         
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
