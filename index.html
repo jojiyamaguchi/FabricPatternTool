@@ -54,6 +54,9 @@
         <input class="input" type="number" id="seam-width-input" placeholder="縫い代幅" value="0">
     </div>
     <script>
+        
+        document.getElementById("debug-div").innerText = document.referrer;
+        
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
         var isDrawing = false;
