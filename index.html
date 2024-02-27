@@ -1,4 +1,4 @@
--<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Circular Pattern Generator</title>
@@ -52,6 +52,8 @@
         <input class="input" type="number" id="rotation-input" placeholder="回転角度" value="90">
         <label for="seam-width-input">ぬいしろ</label>
         <input class="input" type="number" id="seam-width-input" placeholder="縫い代幅" value="0">
+        <label for="scale-input">表示倍率</label>
+        <input class="input" type="number" id="scale-input" placeholder="表示倍率" value="1" min="0.001" max="10" step="0.001">
     </div>
     <script>
         
@@ -155,6 +157,21 @@
               ctx.moveTo(mirrorPoints[0].x, mirrorPoints[0].y);
               ctx.lineTo(mirrorPoints[1].x, mirrorPoints[1].y);
               ctx.stroke();
+
+              // 1cmの目盛りを追加
+              var scale = document.getElementById("scale-input").value;
+              var ppi = window.devicePixelRatio * 96; // 1インチあたりのピクセル密度
+              var mmPerInch = 25.4; // 1インチあたりのミリメートル数
+              var cmPerInch = mmPerInch / 10; // 1インチあたりのセンチメートル数
+              var pixelsPerCm = ppi / cmPerInch * scale; // 1cmあたりのピクセル数
+              var totalCms = canvas.height / pixelsPerCm; // キャンバスの高さに対する総センチメートル数
+              for (var i = 0; i < totalCms; i++) {
+                var y = i * pixelsPerCm;
+                ctx.beginPath();
+                ctx.moveTo(mirrorPoints[0].x - 5, y);
+                ctx.lineTo(mirrorPoints[0].x + 5, y);
+                ctx.stroke();
+              }
             }
         }
         function setExpandMode() {
@@ -266,7 +283,8 @@
         }
         function drawParallelLines(left) {
             var seamWidth = document.getElementById("seam-width-input").value;
-            var mms = seamWidth;
+            var scale = document.getElementById("scale-input").value;
+            var mms = seamWidth * scale;
 
             // ピクセル密度（PPI）を取得
             var ppi = window.devicePixelRatio * 96; // 1インチあたりの標準的なピクセル密度は96ppi
