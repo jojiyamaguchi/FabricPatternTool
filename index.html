@@ -53,10 +53,9 @@
         <label for="seam-width-input">ぬいしろ</label>
         <input class="input" type="number" id="seam-width-input" placeholder="縫い代幅" value="0">
         <label for="scale-input">表示倍率</label>
-        <input class="input" type="number" id="scale-input" placeholder="表示倍率" value="1" min="0.001" max="10" step="0.001">
+        <input class="input" type="number" id="scale-input" placeholder="表示倍率" value="1" min="0.001" max="10" step="0.001" onchange="saveScaleValue()">
     </div>
     <script>
-        
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
         var isDrawing = false;
@@ -353,6 +352,17 @@
             mirrorPoints = [];
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
+        function saveScaleValue() {
+            var scaleValue = document.getElementById("scale-input").value;
+            localStorage.setItem("scaleValue", scaleValue);
+        }
+        function loadScaleValue() {
+            var scaleValue = localStorage.getItem("scaleValue");
+            if (scaleValue) {
+                document.getElementById("scale-input").value = scaleValue;
+            }
+        }
+        loadScaleValue();
         setInterval(drawCircles, 100);
     </script>
 </body>
